@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Κόμβοι - Πληροφορίες</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9fbfc;
+      padding: 30px;
+    }
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 30px;
+    }
+    .node {
+      background: #fff;
+      border-left: 5px solid #3498db;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 6px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .node h2 {
+      margin: 0 0 10px;
+      color: #2c3e50;
+    }
+    .node p {
+      margin: 4px 0;
+      color: #555;
+    }
+    a.back-button {
+      display: inline-block;
+      margin-bottom: 20px;
+      padding: 10px 15px;
+      background: #3498db;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+    a.back-button:hover {
+      background: #2980b9;
+    }
+  </style>
+</head>
+<body>
+  <a href="{{ url_for('dashboard') }}" class="back-button">&larr; Επιστροφή στον Χάρτη</a>
+  <h1>Λίστα Κόμβων</h1>
+
+  {% for node in nodes %}
+  <div class="node">
+    <h2>{{ node.title }}</h2>
+    <p><strong>ID:</strong> {{ node.node_id }}</p>
+    <p><strong>Τοποθεσία:</strong> {{ node.location or 'Άγνωστη' }}</p>
+    <p><a href="{{ url_for('node', node_id=node.node_id.replace('N', '').replace('_', '.') ) }}">Προβολή Λεπτομερειών &rarr;</a></p>
+  </div>
+{% else %}
+  <p>Δεν υπάρχουν κόμβοι για εμφάνιση.</p>
+{% endfor %}
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Λεπτομέρειες Node 1.1</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background: #f0f4f8;
+    }
+    h1 {
+      color: #2c3e50;
+      margin-top: 40px;
+    }
+    .field {
+      background: #ffffff;
+      margin-bottom: 20px;
+      padding: 15px 20px;
+      border-left: 6px solid #3498db;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      border-radius: 6px;
+    }
+    .field h2 {
+      margin: 0 0 5px;
+      font-size: 1.1em;
+      color: #333;
+    }
+    .progress-bar {
+      background: #e0e0e0;
+      border-radius: 10px;
+      overflow: hidden;
+      height: 20px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background-color: #3498db;
+      text-align: right;
+      padding-right: 5px;
+      color: #fff;
+      font-size: 0.9em;
+      line-height: 20px;
+    }
+    .back-button, .history-button {
+      display: inline-block;
+      padding: 10px 15px;
+      background: #3498db;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      margin-right: 10px; /* Add some space between buttons */
+    }
+    .back-button:hover, .history-button:hover {
+      background: #2980b9;
+    }
+    .text-value {
+      font-size: 1em;
+      color: #444;
+      padding: 5px 0;
+    }
+  </style>
+</head>
+
+<body>
+  <a href="{{ url_for('dashboard') }}" class="back-button">&larr; Επιστροφή στον Χάρτη</a>
+  <a href="{{ url_for('history', node_id=node.node_id) }}" class="history-button">Ιστορικό</a>
+
+
+  <header>
+    <h1>{{ node.title }}</h1>
+  </header>
+
+  <h1>Κύριο Πεδίο</h1>
+  <div class="field">
+    <h2>Τίτλος: Βαθμός Επικινδυνοτητας</h2>
+    <p>Τιμή: {{ node.danger_level }}</p>
+  </div>
+
+  <h1>Δευτερεύοντα Πεδία</h1>
+
+  <div class="field">
+    <h2>Θερμοκρασία</h2>
+    <div class="progress-bar">
+      <div class="progress-bar-fill" style="width: {{ node.temperature }}%;">{{ node.temperature }}C° </div>
+    </div>
+  </div>
+
+  <div class="field">
+    <h2>Υγρασία</h2>
+    <div class="progress-bar">
+      <div class="progress-bar-fill" style="width: {{ node.humidity }}%;">{{ node.humidity }}%</div>
+    </div>
+  </div>
+
+  <div class="field">
+    <h2>Αερίων και Καπνού</h2>
+    <div class="progress-bar">
+      <div class="progress-bar-fill" style="width: {{ node.gas_and_smoke }}%;">{{ node.gas_and_smoke }}%</div>
+    </div>
+  </div>
+
+  <div class="field">
+    <h2>Βροχή</h2>
+      <p class="text-value">{{ 'Ναι' if node.rain else 'Όχι' }}</p>
+  </div>
+
+  <div class="field">
+    <h2>Ταχύτητα αέρα</h2>
+    <div class="progress-bar">
+      <div class="progress-bar-fill" style="width: {{ node.wind_speed }}%;">{{ node.wind_speed }} km/h</div>
+    </div>
+  </div>
+
+  <div class="field">
+    <h2>Πυκνότητα χλωρίδας</h2>
+    <div class="progress-bar">
+      <div class="progress-bar-fill" style="width: {{ node.flora_density }}%;">{{ node.flora_density }}%</div>
+    </div>
+  </div>
+
+  <div class="field">
+    <h2>Κλίση τοποθεσίας</h2>
+    <div class="progress-bar">
+      <div class="progress-bar-fill" style="width: {{ node.slope }}%;">{{ node.slope }}°</div>
+    </div>
+  </div>
+
+  <div class="field">
+    <h2>Τύπος Βλάστησης</h2>
+    <p class="text-value">{{ node.vegetation_type }}</p>
+  </div>
+</body>
+</html>

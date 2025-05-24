@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <title>ΣΜΗΕΑ - Drone Ανίχνευσης Πυρκαγιάς</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+    }
+    header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 15px 20px;
+      text-align: center;
+    }
+    .container {
+      display: flex;
+      padding: 20px;
+      gap: 20px;
+    }
+    #map {
+      height: 500px;
+      flex: 2;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .telemetry-panel {
+      flex: 1;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .telemetry-item {
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+    .fire-alert {
+      color: #e74c3c;
+      animation: blink 1s infinite;
+    }
+    @keyframes blink {
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><i class="fas fa-drone-alt"></i> ΣΜΗΕΑ - Drone Ανίχνευσης Πυρκαγιάς</h1>
+  </header>
+
+  <div class="container">
+    <div id="map"></div>
+    <div class="telemetry-panel">
+      <h2><i class="fas fa-info-circle"></i> Τηλεμετρία</h2>
+      <div class="telemetry-item">
+        <h3><i class="fas fa-map-marker-alt"></i> Τοποθεσία</h3>
+        <p id="location">37.7749° N, -122.4194° W</p>
+      </div>
+      <div class="telemetry-item">
+        <h3><i class="fas fa-mountain"></i> Υψόμετρο</h3>
+        <p id="altitude">50.2 m</p>
+      </div>
+      <div class="telemetry-item">
+        <h3><i class="fas fa-tachometer-alt"></i> Ταχύτητα</h3>
+        <p id="speed">5.3 m/s</p>
+      </div>
+      <div class="telemetry-item">
+        <h3><i class="fas fa-battery-three-quarters"></i> Μπαταρία</h3>
+        <p id="battery">78% (11.1V)</p>
+      </div>
+      <div class="telemetry-item">
+        <h3><i class="fas fa-fire"></i> Κατάσταση Πυρκαγιάς</h3>
+        <p id="fire-status">Κανονική κατάσταση</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    // Initialize map and drone marker
+    const map = L.map('map').setView([40.8, 23.5], 7);  // Wider view of Greece
+    L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+      maxZoom: 17,
+      attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, SRTM | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a>'
+    }).addTo(map);
+
+    // Custom icon for a plane
+    const planeIcon = L.divIcon({
+      className: 'plane-icon',
+      html: '<i class="fas fa-plane"></i>',
+      iconSize: [30, 30],
+      iconAnchor: [15, 15]
+    });
+
+    const marker = L.marker([40.8, 23.5], { icon: planeIcon }).addTo(map);
+
+    // Fetch real-time drone data from Flask backend
+    async function fetchDroneData() {
+      const response = await fetch('/api/drone_telemetry');
+      const data = await response.json();
+      return data;
+    }
+
+    // Update UI with live data
+    async function updateTelemetry() {
+      const data = await fetchDroneData();
+
+      // Update telemetry panel
+      document.getElementById('location').textContent =
+        `${data.location.lat.toFixed(4)}° N, ${data.location.lon.toFixed(4)}° E`;
+      document.getElementById('altitude').textContent = `${data.location.altitude.toFixed(1)} m`;
+      document.getElementById('speed').textContent = `${data.movement.speed.toFixed(1)} m/s`;
+      document.getElementById('battery').textContent =
+        `${data.battery.percentage.toFixed(0)}% (${data.battery.voltage.toFixed(1)}V)`;
+
+      // Fire detection
+      const fireStatus = document.getElementById('fire-status');
+      if (data.fire_detection.detected) {
+        fireStatus.textContent = `Ανίχνευση Πυρκαγιάς! (Εμπιστοσύνη: ${(data.fire_detection.confidence * 100).toFixed(0)}%)`;
+        fireStatus.className = "fire-alert";
+      } else {
+        fireStatus.textContent = "Κανονική κατάσταση";
+        fireStatus.className = "";
+      }
+
+      // Update map marker
+      marker.setLatLng([data.location.lat, data.location.lon]);
+      map.panTo([data.location.lat, data.location.lon]);
+    }
+
+    // Poll every 2 seconds
+    setInterval(updateTelemetry, 2000);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Λεπτομέρειες Γονικού Κόμβου</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9fbfc;
+      padding: 30px;
+    }
+
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+
+    .back-button {
+      display: inline-block;
+      margin-bottom: 20px;
+      padding: 10px 15px;
+      background: #3498db;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+
+    .back-button:hover {
+      background: #2980b9;
+    }
+
+    .report-card {
+      background: #fff;
+      border-left: 5px solid #3498db;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 6px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f0f5f9;
+      color: #2c3e50;
+    }
+
+    td {
+      color: #333;
+    }
+
+    .status-ok {
+      color: green;
+      font-weight: bold;
+    }
+
+    .status-bad {
+      color: red;
+      font-weight: bold;
+    }
+
+    .status-unknown {
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+
+<a href="{{ url_for('dashboard') }}" class="back-button">&larr; Επιστροφή στον Χάρτη</a>
+<h1>Γονικός Κόμβος: {{ parent.title }} ({{ parent.node_id }})</h1>
+
+{% if reports %}
+  <div class="report-card">
+    <h2>Αναφορές Παιδικών Κόμβων</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Child Node</th>
+          <th>Timestamp</th>
+          <th>Data Received</th>
+          <th>Data Valid</th>
+          <th>Status Message</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for report in reports %}
+        <tr>
+          <td>{{ report.child_id }}</td>
+          <td>{{ report.timestamp }}</td>
+          <td>
+            {% if report.data_received %}
+              <span class="status-ok">Ναι</span>
+            {% else %}
+              <span class="status-bad">Όχι</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if report.data_valid == true %}
+              <span class="status-ok">Ναι</span>
+            {% elif report.data_valid == false %}
+              <span class="status-bad">Όχι</span>
+            {% else %}
+              <span class="status-unknown">Άγνωστο</span>
+            {% endif %}
+          </td>
+          <td>{{ report.status_message }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <p>Δεν υπάρχουν διαθέσιμες αναφορές για αυτόν τον γονικό κόμβο.</p>
+{% endif %}
+
+</body>
+</html>

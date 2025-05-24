@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Πίνακας Ελέγχου - Node Network</title>
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f8fb;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    .plane-icon {
+  background-color: #e67e22;
+  border-radius: 50%;
+  text-align: center;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+    header {
+      background-color: #2c3e50;
+      color: #ecf0f1;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    nav a {
+      color: #ecf0f1;
+      margin-left: 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    aside {
+      width: 250px;
+      background: #ecf0f1;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+      overflow-y: auto;
+    }
+
+    #map {
+      flex: 1;
+      height: 100%;
+    }
+
+    .node-item {
+      margin-bottom: 15px;
+      padding: 10px;
+      background: #fff;
+      border-left: 5px solid #3498db;
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .node-item h3 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .node-item p {
+      margin: 5px 0 0;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    footer {
+      text-align: center;
+      padding: 10px;
+      background: #ecf0f1;
+      font-size: 0.85rem;
+    }
+
+    /* Custom icon style for home nodes */
+    .home-icon {
+      background-color: #2c3e50;
+      border-radius: 50%;
+      text-align: center;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Πίνακας Ελέγχου Κόμβων - {{ region }}</h1>
+   <nav>
+        <a href="{{ url_for('dashboard') }}">Χάρτης</a>
+        <a href="{{ url_for('nodes_info') }}">Κόμβοι</a>
+        <a href="{{ url_for('drone_info') }}">ΣΜΗΕΑ</a>
+        <span style="color: #ecf0f1; margin-left: 15px;">| {{ region }}</span>
+        <a href="{{ url_for('logout') }}" style="margin-left: 15px;">
+            <i class="fas fa-sign-out-alt"></i> Έξοδος
+        </a>
+    </nav>
+</header>
+
+  <div class="container">
+    <aside>
+  <h2>Κόμβοι - {{ region }}</h2>
+  {% for node in nodes %}
+    <div class="node-item">
+      <h3>{{ node.title }}</h3>
+      <p>Τοποθεσία: {{ node.location }}</p>
+      {% if node.is_parent %}
+        <a href="{{ url_for('parent_node', node_id=node.node_id[1:].replace('_', '.')) }}">
+          Προβολή θυγατρικών κόμβων &rarr;
+        </a>
+      {% else %}
+        <a href="{{ url_for('node', node_id=node.node_id[1:].replace('_', '.')) }}">
+          Προβολή λεπτομερειών &rarr;
+        </a>
+      {% endif %}
+    </div>
+  {% endfor %}
+</aside>
+
+
+    <div id="map" style="height: 600px;"></div>
+
+
+  </div>
+
+  <footer>
+    &copy; 2025 PistolasDev
+  </footer>
+
+<!-- Leaflet Library -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+  // Initialize map with Kavala coordinates
+  const map = L.map('map').setView([40.95, 24.5], 10);
+
+  // Add OpenStreetMap tile layer
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 18,
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  // Get nodes data from Flask
+  const nodes = {{ nodes | tojson | safe }};
+  console.log("Nodes data:", nodes);
+
+  /**
+   * Create appropriate icon for node type
+   * @param {boolean} isParent - Whether node is a parent node
+   * @returns {L.DivIcon} - Leaflet icon object
+   */
+  const createNodeIcon = (isParent) => {
+    return L.divIcon({
+      className: isParent ? 'home-icon' : 'marker-icon',
+      html: `<i class="fas ${isParent ? 'fa-home' : 'fa-circle'}"></i>`,
+      iconSize: isParent ? [30, 30] : [20, 20],
+      iconAnchor: isParent ? [15, 15] : [10, 10]
+    });
+  };
+
+  /**
+   * Generate appropriate URL for node type
+   * @param {string} nodeId - Original node ID (e.g. "N1_1")
+   * @param {boolean} isParent - Whether node is a parent node
+   * @returns {string} - Formatted URL
+   */
+  const getNodeUrl = (nodeId, isParent) => {
+    const formattedId = nodeId.slice(1).replaceAll('_', '.');
+    return isParent ? `/parent/${formattedId}` : `/node/${formattedId}`;
+  };
+
+  // Process nodes and create markers
+  const parentCoords = {};
+
+  // First pass: Store parent coordinates
+  nodes.forEach(node => {
+    if (!node.lat || !node.lng) return;
+
+    const isParent = node.is_parent === true || node.is_parent === 'true';
+    if (isParent) {
+      parentCoords[node.node_id] = {
+        lat: parseFloat(node.lat),
+        lng: parseFloat(node.lng)
+      };
+    }
+  });
+
+  // Second pass: Create markers and connections
+  nodes.forEach(node => {
+    if (!node.lat || !node.lng) return;
+
+    const lat = parseFloat(node.lat);
+    const lng = parseFloat(node.lng);
+    const isParent = node.is_parent === true || node.is_parent === 'true';
+    const label = node.title || node.node_id;
+    const url = getNodeUrl(node.node_id, isParent);
+
+    // Create and add marker
+    const marker = L.marker([lat, lng], {
+      icon: createNodeIcon(isParent)
+    })
+      .addTo(map)
+      .bindTooltip(label, {
+        direction: 'top',
+        offset: [0, -10],
+        opacity: 0.9
+      })
+      .on('click', () => { window.location.href = url });
+
+    // Draw connection line for child nodes
+    if (!isParent && node.node_id.includes('_')) {
+      const parentId = 'N' + node.node_id.split('_')[0].slice(1);
+      if (parentCoords[parentId]) {
+        L.polyline(
+          [[lat, lng], [parentCoords[parentId].lat, parentCoords[parentId].lng]],
+          {
+            color: 'red',
+            weight: 2,
+            dashArray: '5,5'
+          }
+        ).addTo(map);
+      }
+    }
+  });
+</script>
+</body>
+</html>
