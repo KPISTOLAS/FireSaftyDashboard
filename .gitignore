@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -144,3 +145,8 @@ Thumbs.db
 logs/
 temp/
 tmp/ 
+=======
+# Build folder and log file
+build/
+build.log
+>>>>>>> ae110eea0877ecccb6535dce1d6e6905b2a8857a
