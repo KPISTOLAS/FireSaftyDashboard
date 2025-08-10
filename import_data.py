@@ -8,8 +8,8 @@ from supabase import create_client
 import time
 
 # Supabase configuration
-SUPABASE_URL = "https://gejknamvrhhhwkgrhsor.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdlamtuYW12cmhoaHdrZ3Joc29yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQxNDkyMDgsImV4cCI6MjA2OTcyNTIwOH0.nkPB0B7pGREgFdCSIA7J0WpbNhKCH96sYa9s9QyZ508"
+SUPABASE_URL = "link"
+SUPABASE_KEY = "api key"
 
 def import_sample_data():
     """Import sample sensor data into Supabase"""
