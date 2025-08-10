@@ -1,0 +1,12 @@
+body { font-family: Arial, sans-serif; background: #f9fbfc; padding: 30px; }
+h1 { color: #2c3e50; margin-bottom: 20px; }
+.back-button { display: inline-block; margin-bottom: 20px; padding: 10px 15px; background: #3498db; color: #fff; text-decoration: none; border-radius: 5px; }
+.back-button:hover { background: #2980b9; }
+.report-card { background: #fff; border-left: 5px solid #3498db; padding: 20px; margin-bottom: 20px; border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+th, td { text-align: left; padding: 10px; border-bottom: 1px solid #ddd; }
+th { background-color: #f0f5f9; color: #2c3e50; }
+td { color: #333; }
+.status-ok { color: green; font-weight: bold; }
+.status-bad { color: red; font-weight: bold; }
+.status-unknown { color: #999; }

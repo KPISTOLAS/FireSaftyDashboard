@@ -4,69 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Λεπτομέρειες Node 1.1</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 40px;
-      background: #f0f4f8;
-    }
-    h1 {
-      color: #2c3e50;
-      margin-top: 40px;
-    }
-    .field {
-      background: #ffffff;
-      margin-bottom: 20px;
-      padding: 15px 20px;
-      border-left: 6px solid #3498db;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-      border-radius: 6px;
-    }
-    .field h2 {
-      margin: 0 0 5px;
-      font-size: 1.1em;
-      color: #333;
-    }
-    .progress-bar {
-      background: #e0e0e0;
-      border-radius: 10px;
-      overflow: hidden;
-      height: 20px;
-    }
-    .progress-bar-fill {
-      height: 100%;
-      background-color: #3498db;
-      text-align: right;
-      padding-right: 5px;
-      color: #fff;
-      font-size: 0.9em;
-      line-height: 20px;
-    }
-    .back-button, .history-button {
-      display: inline-block;
-      padding: 10px 15px;
-      background: #3498db;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 5px;
-      font-weight: bold;
-      margin-bottom: 20px;
-      margin-right: 10px; /* Add some space between buttons */
-    }
-    .back-button:hover, .history-button:hover {
-      background: #2980b9;
-    }
-    .text-value {
-      font-size: 1em;
-      color: #444;
-      padding: 5px 0;
-    }
-  </style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/node.css') }}">
 </head>
 
 <body>
-  <a href="{{ url_for('dashboard') }}" class="back-button">&larr; Επιστροφή στον Χάρτη</a>
-  <a href="{{ url_for('history', node_id=node.node_id) }}" class="history-button">Ιστορικό</a>
+  <a href="{{ url_for('main.dashboard') }}" class="back-button">&larr; Επιστροφή στον Χάρτη</a>
+  <a href="{{ url_for('main.history', node_id=node.node_id) }}" class="history-button">Ιστορικό</a>
 
 
   <header>

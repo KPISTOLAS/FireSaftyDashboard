@@ -4,69 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Ιστορικό - {{ node.title }}</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 40px;
-      background: #f0f4f8;
-    }
-    h1 {
-      color: #2c3e50;
-      margin-top: 40px;
-    }
-    .back-button {
-      display: inline-block;
-      padding: 10px 15px;
-      background: #3498db;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 5px;
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
-    .back-button:hover {
-      background: #2980b9;
-    }
-    .info {
-      margin-bottom: 20px;
-      color: #555;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #fff;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    th, td {
-      padding: 12px 15px;
-      text-align: left;
-      border-bottom: 1px solid #eee;
-    }
-    th {
-      background-color: #3498db;
-      color: white;
-      position: sticky;
-      top: 0;
-      z-index: 1;
-    }
-    tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
-    .message {
-      padding: 15px;
-      background: #fff3cd;
-      color: #856404;
-      border: 1px solid #ffeeba;
-      border-radius: 6px;
-      margin-bottom: 20px;
-    }
-  </style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/history.css') }}">
 </head>
 <body>
 
-  <a href="{{ url_for('nodes_info') }}" class="back-button">&larr; Επιστροφή στους Κόμβους</a>
+  <a href="{{ url_for('main.nodes_info') }}" class="back-button">&larr; Επιστροφή στους Κόμβους</a>
 
   <h1>Ιστορικά Δεδομένα - {{ node.title or 'Χωρίς Τίτλο' }}</h1>
   <div class="info">

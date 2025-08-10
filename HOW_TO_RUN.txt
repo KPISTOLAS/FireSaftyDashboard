@@ -1,0 +1,252 @@
+===============================================================================
+                    FIRE DETECTION DASHBOARD SYSTEM
+                           HOW TO RUN GUIDE
+===============================================================================
+
+📋 TABLE OF CONTENTS
+===================
+1. Prerequisites
+2. Quick Start (Windows)
+3. Quick Start (Linux/Mac)
+4. Detailed Setup
+5. Troubleshooting
+6. Configuration Options
+7. Testing the Application
+8. Stopping the Application
+
+🚀 1. PREREQUISITES
+==================
+- Python 3.8 or higher
+- pip (Python package manager)
+- Modern web browser (Chrome, Firefox, Safari, Edge)
+- Internet connection (for database access, optional)
+
+📦 2. QUICK START (WINDOWS)
+===========================
+
+Step 1: Open Command Prompt or PowerShell
+----------------------------------------
+- Press Win + R, type "cmd" or "powershell", press Enter
+- Navigate to your project directory:
+  cd "C:\Users\kkako.DESKTOP-JTTG40I\Desktop\ptixiakh\Codes\Dashboard System\dashboard_code"
+
+Step 2: Install Dependencies
+---------------------------
+If Python is in PATH:
+  pip install -r requirements.txt
+
+If Python is not in PATH (use full path):
+  "C:\Users\kkako.DESKTOP-JTTG40I\AppData\Local\Programs\Python\Python313\python.exe" -m pip install -r requirements.txt
+
+Step 3: Run the Application
+---------------------------
+If Python is in PATH:
+  python run.py
+
+If Python is not in PATH:
+  "C:\Users\kkako.DESKTOP-JTTG40I\AppData\Local\Programs\Python\Python313\python.exe" run.py
+
+Step 4: Access the Dashboard
+---------------------------
+- Open your web browser
+- Go to: http://localhost:5000
+- Select your region and start monitoring
+
+🐧 3. QUICK START (LINUX/MAC)
+=============================
+
+Step 1: Open Terminal
+---------------------
+- Open terminal application
+- Navigate to your project directory:
+  cd /path/to/dashboard_code
+
+Step 2: Install Dependencies
+---------------------------
+  pip install -r requirements.txt
+  # or
+  python3 -m pip install -r requirements.txt
+
+Step 3: Run the Application
+---------------------------
+  python run.py
+  # or
+  python3 run.py
+
+Step 4: Access the Dashboard
+---------------------------
+- Open your web browser
+- Go to: http://localhost:5000
+- Select your region and start monitoring
+
+⚙️ 4. DETAILED SETUP
+====================
+
+Environment Configuration
+-----------------------
+1. Copy the environment template:
+   cp env.example .env
+
+2. Edit .env file (optional - defaults will work):
+   - FLASK_CONFIG=development
+   - FLASK_DEBUG=True
+   - SECRET_KEY=your-secret-key-here
+   - HOST=0.0.0.0
+   - PORT=5000
+   - SUPABASE_URL=your-supabase-url
+   - SUPABASE_KEY=your-supabase-key
+
+Virtual Environment (Recommended)
+-------------------------------
+1. Create virtual environment:
+   python -m venv venv
+
+2. Activate virtual environment:
+   Windows: venv\Scripts\activate
+   Linux/Mac: source venv/bin/activate
+
+3. Install dependencies:
+   pip install -r requirements.txt
+
+4. Run application:
+   python run.py
+
+🔧 5. TROUBLESHOOTING
+=====================
+
+Common Issues and Solutions
+--------------------------
+
+Issue: "python is not recognized"
+Solution: Use full path to Python
+  "C:\Users\kkako.DESKTOP-JTTG40I\AppData\Local\Programs\Python\Python313\python.exe" run.py
+
+Issue: "pip is not recognized"
+Solution: Use Python's built-in pip
+  python -m pip install -r requirements.txt
+
+Issue: "ModuleNotFoundError"
+Solution: Install missing dependencies
+  pip install -r requirements.txt
+
+Issue: "Port already in use"
+Solution: Change port in .env file or use different port
+  PORT=5001 python run.py
+
+Issue: "Database connection failed"
+Solution: Application will use mock data automatically
+  - Check your .env file for correct database credentials
+  - Or leave default values for testing
+
+Issue: "Permission denied"
+Solution: Run as administrator or use user installation
+  pip install --user -r requirements.txt
+
+🔧 6. CONFIGURATION OPTIONS
+===========================
+
+Environment Variables
+-------------------
+FLASK_CONFIG=development|production|testing
+FLASK_DEBUG=True|False
+SECRET_KEY=your-secret-key
+HOST=0.0.0.0
+PORT=5000
+SUPABASE_URL=your-database-url
+SUPABASE_KEY=your-database-key
+
+Run Modes
+---------
+Development (default):
+  python run.py
+
+Production:
+  FLASK_CONFIG=production python run.py
+
+Testing:
+  FLASK_CONFIG=testing python run.py
+
+🧪 7. TESTING THE APPLICATION
+============================
+
+Health Check
+-----------
+- Open browser: http://localhost:5000/api/health
+- Should return JSON with status information
+
+Main Dashboard
+-------------
+- Open browser: http://localhost:5000
+- Should redirect to login page
+- Select region and access dashboard
+
+API Endpoints
+-------------
+- Health: http://localhost:5000/api/health
+- Drone Telemetry: http://localhost:5000/api/drone_telemetry
+
+Features to Test
+---------------
+1. Region Selection
+2. Dashboard Map
+3. Node Information
+4. Drone Surveillance
+5. Historical Data
+6. Error Pages
+
+🛑 8. STOPPING THE APPLICATION
+==============================
+
+In Terminal/Command Prompt:
+- Press Ctrl + C to stop the application
+
+In Background:
+- Find the process and kill it:
+  Windows: taskkill /f /im python.exe
+  Linux/Mac: pkill -f "python run.py"
+
+📱 9. ACCESSING FROM OTHER DEVICES
+=================================
+
+If you want to access from other devices on your network:
+
+1. Find your computer's IP address:
+   Windows: ipconfig
+   Linux/Mac: ifconfig
+
+2. Access from other device:
+   http://YOUR_IP_ADDRESS:5000
+
+Example: http://192.168.1.100:5000
+
+⚠️ 10. SECURITY NOTES
+=====================
+
+- The application runs on HTTP by default (not HTTPS)
+- For production, use HTTPS and proper security measures
+- Change default secret key in production
+- Use environment variables for sensitive data
+- Database credentials should be kept secure
+
+📞 11. SUPPORT
+==============
+
+If you encounter issues:
+
+1. Check the logs in the terminal
+2. Verify all dependencies are installed
+3. Check your .env file configuration
+4. Ensure port 5000 is not in use
+5. Try running with different configuration:
+   FLASK_CONFIG=testing python run.py
+
+For more information:
+- README.md - Main documentation
+- PROJECT_STRUCTURE.md - Technical details
+- MIGRATION_GUIDE.md - Migration instructions
+
+===============================================================================
+🎉 SUCCESS! Your Fire Detection Dashboard System is now running!
+===============================================================================
+
+Access your dashboard at: http://localhost:5000 
